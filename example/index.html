@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <title>Vue-tag-input</title>
+    <script src="../node_modules/vue/dist/vue.min.js"></script>
+    <script src="tag-input.js"></script>
+  </head>
+  <body>
+    <h1>Vue-tag-input组件示例</h1>
+
+    <div id="app">
+      <div style="width: 100px;">
+        <tag-input v-model="tags"
+                   :get-items="getItems">
+        </tag-input>
+      </div>
+    </div>
+    <script>
+    new Vue({
+      el: '#app',
+      data: {
+        tags: []
+      },
+      methods: {
+        getItems: function(query) {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => ({
+                label: query + item,
+                value: item
+              }));
+
+              resolve(items);
+            }, 300);
+          });
+        }
+      }
+    });
+  </script>
+  </body>
+</html>
