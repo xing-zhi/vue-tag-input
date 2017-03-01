@@ -8,7 +8,7 @@ A tag input component for Vue2.x.
 
 ## Props
 | Name | Type | Required | Default | Description |
-| ---:| --- | ---| --- |--- |
+| ----:| --- | ---| --- |--- |
 | v-model | Array | true | undefined | Tags |
 | get-items | Function | true | undefined | Function to get the items to choose from when the keyword changes, it gets the keyword as parameter and return a Promise |
 | label-key | String | false | label | The property to show in the result list |
