@@ -3,23 +3,33 @@
        tabindex="-1"
        @keyup.up="minusIndex"
        @keyup.down="plusIndex"
+       @keyup.left="moveLeft"
+       @keyup.right="moveRight"
        @keyup.enter.prevent="select"
-       @keyup.delete="popTag"
-       @focus="onFocus">
-    <tag v-for="(tagItem, index) in tagsToShow"
-         :key="index"
-         :tag="tagItem"
-         :index="index"
-         @remove-tag="removeTag">
-    </tag>
-    <input type="text"
-           v-model="keyword"
-           @focus="onFocus"
-           @blur="stopHandleInput"
-           @input="input"
-           ref="input"
-           style="float: left;"
-           :style="'width:' + (tmpInput.length + 1) + 'em;'"/>
+       @focus="setFocus">
+    <Input v-model="keyword"
+           :index="-1"
+           :focus-index="focusIndex"
+           :selected="selected"
+           :on-focus="onFocus"
+           :on-blur="stopHandleInput">
+    </Input>
+    <template v-for="(tagItem, index) in tagsToShow">
+      <Tag :key="index"
+           :tag="tagItem"
+           :index="index"
+           @remove-tag="removeTag">
+      </Tag>
+      <Input v-model="keyword"
+             :index="index"
+             :focus-index="focusIndex"
+             :selected="selected"
+             :on-focus="onFocus"
+             :on-blur="stopHandleInput"
+             @delete="removeTag">
+      </Input>
+    </template>
+
     <ul v-show="items.length && keyword && searching"
         class="search-result-container"
         :style="'max-height:' + height + 'px'"
@@ -41,7 +51,8 @@
 <script>
 const inArray = (item, arr) => arr.indexOf(item) !== -1;
 
-import tag from './tag';
+import Tag from './tag';
+import Input from './input';
 
 /*
  * v-model: 标签列表
@@ -70,7 +81,8 @@ export default {
     }
   },
   components: {
-    tag
+    Tag,
+    Input
   },
   data() {
     return {
@@ -80,9 +92,9 @@ export default {
       requestApi: false,
       keyword: '',
       prevKeyword: '',
-      tmpInput: '',
-      prevTmpInput: '',
-      isScrollClick: false
+      isScrollClick: false,
+      focusIndex: -2,
+      selected: false
     };
   },
   computed: {
@@ -98,12 +110,8 @@ export default {
       this.prevKeyword = oldV;
 
       if ( v ) {
-        this.search();
+       this.search();
       }
-    },
-    tmpInput(v, oldV) {
-      // 用于判断回删tag
-      this.prevTmpInput = oldV;
     }
   },
   methods: {
@@ -111,11 +119,12 @@ export default {
     onScroll() {
       this.isScrollClick = true;
     },
-    input(e) {
-      this.tmpInput = e.target.value;
+    setFocus() {
+      this.focusIndex = this.tagsToShow.length || -1;
     },
-    onFocus() {
-      this.$refs.input.focus();
+    onFocus(index) {
+      this.focusIndex = index;
+      this.selected = false;
       if ( this.keyword ) {
         this.search();
       }
@@ -140,34 +149,30 @@ export default {
         });
     },
     removeTag(index) {
-      this.value.splice(index, 1);
-    },
-    popTag() {
-      if ( !this.prevTmpInput && !this.tmpInput ) {
-        this.value.pop();
-        return;
-      }
-      if ( this.prevTmpInput && !this.tmpInput ) {
-        this.prevTmpInput = '';
-        return;
+      if ( index !== -1 ) {
+        this.value.splice(index, 1);
+        // 不异步新的input还没有渲染，后续查看是否必要
+        setTimeout(() => {
+          this.focusIndex--;
+        });
       }
     },
     select() {
       const item = this.items[this.currentIndex];
 
       if ( !inArray(item, this.value) ) {
-        this.value.push(item);
+        this.value.splice(this.focusIndex + 1, 0, item);
+        // 不异步新的input还没有渲染，后续查看是否必要
+        setTimeout(() => {
+          this.focusIndex++;
+        });
       }
 
       this.keyword = '';
       this.currentIndex = 0;
       this.searching = false;
-      this.tmpInput = '';
       this.isScrollClick = false;
-
-      setTimeout(() => {
-        this.prevTmpInput = '';
-      });
+      this.selected = true;
     },
     plusIndex() {
       this.currentIndex = (this.currentIndex + 1) % this.itemAmount;
@@ -180,9 +185,9 @@ export default {
       this.isScrollClick = false;
       this.select();
     },
-    stopHandleInput() {
+    stopHandleInput(e) {
         // 增加200ms的延时，以应对点击选择的情况，因为这种情况下input会首先失去焦点，触发这个事件
-        const delay = 200;
+      const delay = 200;
 
       setTimeout(() => {
         if ( this.isScrollClick ) {
@@ -199,6 +204,31 @@ export default {
       return this.keyword
         && !this.requestApi
         && this.items.length === 0;
+    },
+    moveLeft() {
+      const focusIndex = this.focusIndex;
+      const maxIndex = this.tagsToShow.length || -1;
+
+      if ( focusIndex === -1 ) {
+
+        if ( maxIndex !== -1 ) {
+          this.focusIndex = maxIndex - 1;
+        }
+      } else {
+        this.focusIndex--;
+      }
+    },
+    moveRight() {
+      const focusIndex = this.focusIndex;
+      const maxIndex = this.tagsToShow.length || -1;
+
+      if ( focusIndex === maxIndex - 1 ) {
+        if ( maxIndex !== -1 ) {
+          this.focusIndex = - 1;
+        }
+      } else {
+        this.focusIndex++;
+      }
     }
   }
 };
@@ -223,15 +253,6 @@ export default {
     }
     &:focus {
         outline: none;
-    }
-    input {
-        border: none;
-        outline: none;
-        line-height: 20px;
-        height: 20px;
-        padding: 0;
-        margin-top: 3px;
-        min-width: 1em;
     }
     .search-result-container {
         padding: 0;

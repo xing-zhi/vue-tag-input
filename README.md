@@ -5,6 +5,7 @@ A tag input component for Vue2.x.
 ## Features
 + [x] Use up and down key to move up and down in the result list
 + [x] Select the tag with Enter key or click
++ [x] Add and delete tag around any tag && move around with left arrow key and right arrow key
 
 ## Props
 | Name | Type | Required | Default | Description |
