@@ -12,7 +12,8 @@
     <div id="app">
       <div style="width: 100px;">
         <tag-input v-model="tags"
-                   :get-items="getItems">
+                   :get-items="getItems"
+                   :readonly="true">
         </tag-input>
       </div>
     </div>
@@ -20,7 +21,7 @@
     new Vue({
       el: '#app',
       data: {
-        tags: []
+        tags: [{ label: 'abc' }, { label: 'b' }, { label: 'c' }]
       },
       methods: {
         getItems: function(query) {

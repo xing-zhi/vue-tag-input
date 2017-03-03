@@ -13,5 +13,6 @@ A tag input component for Vue2.x.
 | v-model | Array | true | undefined | Tags |
 | get-items | Function | true | undefined | Function to get the items to choose from when the keyword changes, it gets the keyword as parameter and return a Promise |
 | label-key | String | false | label | The property to show in the result list |
-| height | Number | false | 280(10 rows) | The height of the result list
+| height | Number | false | 280(10 rows) | The height of the result list |
+| readonly | Boolean | false | false | Display tags without edit
 

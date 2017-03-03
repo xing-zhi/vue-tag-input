@@ -8,6 +8,7 @@
        @keyup.enter.prevent="select"
        @focus="setFocus">
     <Input v-model="keyword"
+           v-if="!readonly"
            :index="-1"
            :focus-index="focusIndex"
            :selected="selected"
@@ -18,9 +19,11 @@
       <Tag :key="index"
            :tag="tagItem"
            :index="index"
+           :readonly="readonly"
            @remove-tag="removeTag">
       </Tag>
       <Input v-model="keyword"
+             v-if="!readonly"
              :index="index"
              :focus-index="focusIndex"
              :selected="selected"
@@ -78,6 +81,10 @@ export default {
     height: {
       type: Number,
       default: 280
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     }
   },
   components: {

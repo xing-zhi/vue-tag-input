@@ -1,7 +1,11 @@
 <template>
-  <div class="tag-input-tag">
+  <div class="tag-input-tag" :class="{ readonly }">
     {{ tag }}
-    <span class="tag-input-tag-remove" @click="removeTag">&times;</span>
+    <span v-if="!readonly"
+          class="tag-input-tag-remove"
+          @click="removeTag">
+      &times;{{ readonly }}
+    </span>
   </div>
 </template>
 <script>
@@ -14,6 +18,10 @@ export default {
     index: {
       type: Number,
       required: true
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -48,6 +56,10 @@ export default {
       cursor: pointer;
       padding-left: 4px;
       vertical-align: baseline;
+  }
+  &.readonly {
+      padding-right: 10px;
+      margin-right: 5px;
   }
 }
 </style>
