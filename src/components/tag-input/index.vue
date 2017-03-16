@@ -230,7 +230,8 @@ export default {
       }, delay);
     },
     showNoResult() {
-      return this.keyword
+      return !this.simpleMode
+        && this.keyword
         && !this.requestApi
         && this.items.length === 0;
     },
