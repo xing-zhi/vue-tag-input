@@ -53,6 +53,7 @@
 
 <script>
 const inArray = (item, arr) => arr.indexOf(item) !== -1;
+const isObject = (a) => typeof a === 'object' && a !== null;
 
 import Tag from './tag';
 import Input from './input';
@@ -109,7 +110,8 @@ export default {
       return this.items.length;
     },
     tagsToShow() {
-      return this.value.map((item) => item[this.labelKey]);
+      return this.value
+        .map(a => isObject(a) ? a[this.labelKey] : a);
     }
   },
   watch: {
