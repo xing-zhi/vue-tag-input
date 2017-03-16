@@ -4,7 +4,7 @@
     <span v-if="!readonly"
           class="tag-input-tag-remove"
           @click="removeTag">
-      &times;{{ readonly }}
+      &times;
     </span>
   </div>
 </template>
