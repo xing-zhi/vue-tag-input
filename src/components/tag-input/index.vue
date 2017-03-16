@@ -255,6 +255,7 @@ export default {
     background-color: #fff;
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     min-width: 200px;
+    min-height: 28px;
     &::after {
         content: '';
         display: block;
