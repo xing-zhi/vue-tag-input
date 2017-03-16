@@ -54,6 +54,7 @@
 <script>
 const inArray = (item, arr) => arr.indexOf(item) !== -1;
 const isObject = (a) => typeof a === 'object' && a !== null;
+const isFunction = (a) => typeof a === 'function';
 
 import Tag from './tag';
 import Input from './input';
@@ -112,6 +113,12 @@ export default {
     tagsToShow() {
       return this.value
         .map(a => isObject(a) ? a[this.labelKey] : a);
+    },
+    simpleMode() {
+      // In simple mode
+      // There is no getItem function
+      // The input will be the new tag when press the [enter] key
+      return !isFunction(this.getItems);
     }
   },
   watch: {
@@ -139,6 +146,11 @@ export default {
       }
     },
     search() {
+      // There is no search in simple mode
+      if ( this.simpleMode ) {
+        return;
+      }
+
       this.searching = true;
       this.requestApi = true;
 
@@ -167,7 +179,15 @@ export default {
       }
     },
     select() {
-      const item = this.items[this.currentIndex];
+      let item;
+
+      // The keyword is the new tag in simple mode
+      // The selected item is the new tag otherwise
+      if ( this.simpleMode ) {
+        item = this.keyword;
+      } else {
+        item = this.items[this.currentIndex];
+      }
 
       if ( !inArray(item, this.value) ) {
         this.value.splice(this.focusIndex + 1, 0, item);
