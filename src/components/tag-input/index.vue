@@ -98,7 +98,7 @@ export default {
       items: [],
       currentIndex: 0,
       searching: false,
-      requestApi: false,
+      requestCount: 0,
       keyword: '',
       prevKeyword: '',
       isScrollClick: false,
@@ -152,7 +152,7 @@ export default {
       }
 
       this.searching = true;
-      this.requestApi = true;
+      this.requestCount++;
 
       // 如果两次关键词相同，不调用接口，适用于已经输入关键词后的二次获取焦点
       if ( this.keyword === this.prevKeyword ) {
@@ -161,11 +161,14 @@ export default {
 
       Promise.resolve(this.getItems(this.keyword))
         .then((items) => {
-          this.requestApi = false;
-          this.items = items;
+          this.requestCount--;
+
+          if ( !this.requestCount ) {
+            this.items = items;
+          }
         })
         .catch((err) => {
-          this.requestApi = false;
+          this.requestCount--;
           console.error(err);
         });
     },
@@ -232,7 +235,7 @@ export default {
     showNoResult() {
       return !this.simpleMode
         && this.keyword
-        && !this.requestApi
+        && !this.requestCount
         && this.items.length === 0;
     },
     moveLeft() {
