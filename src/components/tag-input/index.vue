@@ -1,6 +1,7 @@
 <template>
   <div class="tag-input-container"
        tabindex="-1"
+       :class="{ focus: focusIndex !== -2 }"
        @keyup.up="minusIndex"
        @keyup.down="plusIndex"
        @keyup.left="moveLeft"
@@ -233,6 +234,7 @@ export default {
         }
 
         this.searching = false;
+        this.focusIndex = -2;
         if ( this.keyword === '' ) {
           this.selectedItem = '';
         }
@@ -292,7 +294,10 @@ export default {
         clear: both;
     }
     &:focus {
-      outline: none;
+        outline: none;
+    }
+    &.focus {
+        border-color: #66afe9;
     }
     .spinner {
         position: absolute;
