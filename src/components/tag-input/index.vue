@@ -32,7 +32,7 @@
              @delete="removeTag">
       </Input>
     </template>
-
+    <Spinner class="spinner" v-if="requestCount && !simple && spinner"></Spinner>
     <ul v-show="items.length && keyword && searching"
         class="search-result-container"
         :style="'max-height:' + height + 'px'"
@@ -58,6 +58,7 @@ const isFunction = (a) => typeof a === 'function';
 
 import Tag from './tag';
 import Input from './input';
+import Spinner from './spinner';
 
 /*
  * v-model: 标签列表
@@ -87,11 +88,16 @@ export default {
     readonly: {
       type: Boolean,
       default: false
+    },
+    spinner: {
+      type: Boolean,
+      default: true
     }
   },
   components: {
     Tag,
-    Input
+    Input,
+    Spinner
   },
   data() {
     return {
@@ -286,7 +292,13 @@ export default {
         clear: both;
     }
     &:focus {
-        outline: none;
+      outline: none;
+    }
+    .spinner {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%) scale(0.5);
     }
     .search-result-container {
         padding: 0;
@@ -310,5 +322,10 @@ export default {
             }
         }
     }
+}
+</style>
+<style>
+.spinner svg path {
+    fill: #d9d9d9;
 }
 </style>
