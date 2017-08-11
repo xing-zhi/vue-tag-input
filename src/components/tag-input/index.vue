@@ -18,9 +18,9 @@
     </Input>
     <template v-for="(tagItem, index) in tagsToShow">
       <Tag :key="index"
-           :tag="tagItem"
+           :tag="tagItem.tag"
            :index="index"
-           :readonly="readonly"
+           :readonly="readonly || tagItem.readonly"
            @remove-tag="removeTag">
       </Tag>
       <Input v-model="keyword"
@@ -121,7 +121,7 @@ export default {
     },
     tagsToShow() {
       return this.value
-        .map(a => isObject(a) ? a[this.labelKey] : a);
+        .map(a => isObject(a) ? { tag: a[this.labelKey], readonly: a.readonly } : { tag: a });
     },
     simpleMode() {
       // In simple mode
@@ -182,7 +182,7 @@ export default {
         });
     },
     removeTag(index) {
-      if ( index !== -1 ) {
+      if ( index !== -1 && !this.value[index].readonly ) {
         this.value.splice(index, 1);
         // 不异步新的input还没有渲染，后续查看是否必要
         setTimeout(() => {
