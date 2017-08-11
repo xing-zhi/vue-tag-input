@@ -53,13 +53,15 @@
 </template>
 
 <script>
-const inArray = (item, arr) => arr.indexOf(item) !== -1;
-const isObject = (a) => typeof a === 'object' && a !== null;
-const isFunction = (a) => typeof a === 'function';
+import deepEqual from 'deep-equal';
 
 import Tag from './tag';
 import Input from './input';
 import Spinner from './spinner';
+
+const inArray = (itemToTest, arr) => arr.some(item => deepEqual(itemToTest, item));
+const isObject = (a) => typeof a === 'object' && a !== null;
+const isFunction = (a) => typeof a === 'function';
 
 /*
  * v-model: 标签列表
