@@ -42,7 +42,7 @@
           :key="index"
           class="search-result-item"
           @click="selectItem(index)"
-          :class="{ highlight: currentIndex === index }">
+          :class="{ highlight: currentIndex === index, selected: inArray(item, value) }">
         {{ item[labelKey] }}
       </li>
     </ul>
@@ -324,8 +324,24 @@ export default {
         .search-result-item {
             padding: 5px 10px;
             text-align: left;
+            position: relative;
             &.highlight {
                 background: #eee;
+            }
+            &.selected {
+                font-weight: 600;
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    right: 10px;
+                    width: 5px;
+                    height: 10px;
+                    border: 2px solid #168ddf;
+                    border-left: none;
+                    border-top: none;
+                    transform: rotate(45deg) translate(-50%, -50%);
+                }
             }
         }
     }
