@@ -8,32 +8,32 @@
        @keyup.right="moveRight"
        @keyup.enter.prevent="select"
        @focus="setFocus">
-    <Input v-model="keyword"
-           v-if="!readonly"
-           :index="-1"
-           :focus-index="focusIndex"
-           :selected="selected"
-           :on-focus="onFocus"
-           :on-blur="stopHandleInput">
-    </Input>
+    <tag-input v-model="keyword"
+               v-if="!readonly"
+               :index="-1"
+               :focus-index="focusIndex"
+               :selected="selected"
+               :on-focus="onFocus"
+               :on-blur="stopHandleInput">
+    </tag-input>
     <template v-for="(tagItem, index) in tagsToShow">
-      <Tag :key="index"
+      <tag :key="index"
            :tag="tagItem.tag"
            :index="index"
            :readonly="readonly || tagItem.readonly"
            @remove-tag="removeTag">
-      </Tag>
-      <Input v-model="keyword"
-             v-if="!readonly"
-             :index="index"
-             :focus-index="focusIndex"
-             :selected="selected"
-             :on-focus="onFocus"
-             :on-blur="stopHandleInput"
-             @delete="removeTag">
-      </Input>
+      </tag>
+      <tag-input v-model="keyword"
+                 v-if="!readonly"
+                 :index="index"
+                 :focus-index="focusIndex"
+                 :selected="selected"
+                 :on-focus="onFocus"
+                 :on-blur="stopHandleInput"
+                 @delete="removeTag">
+      </tag-input>
     </template>
-    <Spinner class="spinner" v-if="requestCount && !simple && spinner"></Spinner>
+    <spinner class="spinner" v-if="requestCount && !simple && spinner"></spinner>
     <ul v-show="items.length && keyword && searching"
         class="search-result-container"
         :style="'max-height:' + height + 'px'"
@@ -55,9 +55,9 @@
 <script>
 import deepEqual from 'deep-equal';
 
-import Tag from './tag';
-import Input from './input';
-import Spinner from './spinner';
+import tag from './tag';
+import tagInput from './input';
+import spinner from './spinner';
 
 const inArray = (itemToTest, arr) => arr.some(item => deepEqual(itemToTest, item));
 const isObject = (a) => typeof a === 'object' && a !== null;
@@ -98,9 +98,9 @@ export default {
     }
   },
   components: {
-    Tag,
-    Input,
-    Spinner
+    tag,
+    tagInput,
+    spinner
   },
   data() {
     return {
