@@ -184,10 +184,7 @@ export default {
     removeTag(index) {
       if ( index !== -1 && !this.value[index].readonly ) {
         this.value.splice(index, 1);
-        // 不异步新的input还没有渲染，后续查看是否必要
-        setTimeout(() => {
-          this.focusIndex--;
-        });
+        this.focusIndex--;
       }
     },
     select() {
@@ -203,8 +200,8 @@ export default {
 
       if ( !inArray(item, this.value) ) {
         this.value.splice(this.focusIndex + 1, 0, item);
-        // 不异步新的input还没有渲染，后续查看是否必要
-        setTimeout(() => {
+        // update focuseIndex after DOM updated
+        this.$nextTick(() => {
           this.focusIndex++;
         });
       }
