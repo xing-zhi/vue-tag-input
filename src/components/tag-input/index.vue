@@ -224,7 +224,9 @@ export default {
       this.select();
     },
     stopHandleInput(e) {
-        // 增加200ms的延时，以应对点击选择的情况，因为这种情况下input会首先失去焦点，触发这个事件
+      // when click to select item, the blur event of input will fire before the click event of the select item
+      // but the click event should be handled first
+      // so add 200ms delay
       const delay = 200;
 
       setTimeout(() => {
