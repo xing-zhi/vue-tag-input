@@ -33,7 +33,7 @@
                  @delete="removeTag">
       </tag-input>
     </template>
-    <spinner class="spinner" v-if="requestCount && !simple && spinner"></spinner>
+    <spinner class="spinner" v-if="requestCount && !simpleMode && spinner"></spinner>
     <ul v-show="items.length && keyword && searching"
         class="search-result-container"
         :style="'max-height:' + height + 'px'"
