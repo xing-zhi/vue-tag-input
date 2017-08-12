@@ -236,7 +236,6 @@ export default {
         }
 
         this.searching = false;
-        this.focusIndex = -2;
         if ( this.keyword === '' ) {
           this.selectedItem = '';
         }
