@@ -145,7 +145,9 @@ export default {
       this.isScrollClick = true;
     },
     setFocus() {
-      this.focusIndex = this.tagsToShow.length || -1;
+      const tagAmount = this.tagsToShow.length;
+
+      this.focusIndex = tagAmount ? tagAmount - 1 : -1;
     },
     onFocus(index) {
       this.focusIndex = index;
